@@ -1,14 +1,14 @@
 import { AppHeader } from "@/components/ui/header"
 import React, { Suspense } from "react"
 
-const Tasks = React.lazy(() => import('@/components/ui/tasks/tasks'))
+const Contacts = React.lazy(() => import('@/components/ui/contacts/contacts'))
 
 export default function Layout() {
 
   return (<>
     <AppHeader />
     <Suspense>
-      <Tasks />
+      <Contacts />
     </Suspense>
   </>
   )
