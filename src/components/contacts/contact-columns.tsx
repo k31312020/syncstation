@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header"
 import { Contact } from "@/data/schemas/contacts"
-import { DataTableRowActions } from "./data-table-row-actions"
+import { DataTableRowActions } from "../ui/data-table-row-actions"
 
 export const columns: ColumnDef<Contact>[] = [
   {

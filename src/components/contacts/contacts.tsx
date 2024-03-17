@@ -1,21 +1,18 @@
 import { z } from "zod"
-
-import { columns } from "@/components/ui/columns"
+import { columns } from "@/components/contacts/contact-columns"
 import { DataTable } from "@/components/ui/data-table"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Contact, contactsSchema } from "@/data/schemas/contacts"
 import { ContactEdit } from "./contact-edit"
-
+import axios from "axios"
+import { useQuery } from "react-query"
 // Simulate a database read for customers.
 async function getTasks(): Promise<Contact[]> {
-    const data = await fetch("customers.json").then(data => data.json())
-
-    return z.array(contactsSchema).parse(data)
+    const response = await axios.get("customers.json")
+    return z.array(contactsSchema).parse(response.data)
 }
 
 export default function ContactsTable() {
-
-    const [contacts, setContacts] = useState<Contact[]>([])
 
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
 
@@ -23,11 +20,7 @@ export default function ContactsTable() {
         setSelectedContact(contact)
     }
 
-    useEffect(() => {
-        getTasks().then(result => {
-            setContacts(result)
-        })
-    }, [])
+    const { data: contacts } = useQuery("getTasks", getTasks)
 
     return (
         <>
@@ -56,7 +49,7 @@ export default function ContactsTable() {
                 <div className="flex gap-8">
                     <ContactEdit contact={selectedContact}/>
                     <div className="flex-1">
-                        <DataTable data={contacts} columns={columns} onRowSelected={onRowSelected} />
+                        <DataTable data={contacts || []} columns={columns} onRowSelected={onRowSelected} />
                     </div>
                 </div>
                 

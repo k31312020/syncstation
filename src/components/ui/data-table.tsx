@@ -4,10 +4,7 @@ import * as React from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
-  Row,
-  RowSelectionState,
   SortingState,
-  Updater,
   VisibilityState,
   flexRender,
   getCoreRowModel,
