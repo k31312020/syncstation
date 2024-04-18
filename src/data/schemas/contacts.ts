@@ -4,10 +4,10 @@ import { z } from "zod"
 // IRL, you will have a schema for your data models.
 export const contactsSchema = z.object({
   id: z.number(),
-  firstname: z.string(),
+  firstname: z.string().min(1, {message: "First name is required"}),
   lastname: z.string(),
   phone: z.string(),
-  email: z.string(),
+  email: z.string().email(),
   address: z.string()
 })
 

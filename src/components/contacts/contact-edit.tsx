@@ -1,5 +1,3 @@
-import * as React from "react"
-
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -10,14 +8,38 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Contact } from "@/data/schemas/contacts"
+import { Contact, contactsSchema } from "@/data/schemas/contacts"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { UseFormReturn, useForm } from "react-hook-form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { toast } from "@/components/ui/use-toast"
 
 interface ContactProps {
-  contact: Contact | null
+  contact: Contact | undefined,
 }
 
-export function ContactEdit({contact}: ContactProps) {
+export function ContactEdit({ contact }: ContactProps) {
+  const form: UseFormReturn<Contact> = useForm<Contact>({
+    resolver: zodResolver(contactsSchema),
+    mode: 'all',
+    defaultValues: {
+      id: undefined,
+      firstname: '',
+      lastname: '',
+      email: '',
+      phone: '',
+      address: ''
+    },
+    values: contact
+  })
+
+  const submit = (contact: Contact) => {
+    // after async update
+    toast({
+      description: "Contact updated successfully",
+    })
+  }
+
   return (
     <Card className="w-[350px]">
       <CardHeader>
@@ -28,33 +50,71 @@ export function ContactEdit({contact}: ContactProps) {
         {!contact ? (<div className="text-center">
           Please select a contact
         </div>) :
-        (<form>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name" className="asterik">Firstname</Label>
-              <Input id="name" value={contact?.firstname} placeholder="Name of your project" />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Lastname</Label>
-              <Input id="name" value={contact?.lastname} placeholder="Name of your project" />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Email</Label>
-              <Input id="name" value={contact?.email} placeholder="Name of your project" />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Phone</Label>
-              <Input id="name" value={contact?.phone} placeholder="Name of your project" />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Address</Label>
-              <Input id="name" value={contact?.address} placeholder="Name of your project" />
-            </div>
-          </div>
-        </form>)}
+          (<Form {...form}>
+              <FormField
+                control={form.control}
+                name="firstname"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Firstname</FormLabel>
+                    <FormControl>
+                      <Input placeholder="firstname" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              <FormField
+                control={form.control}
+                name="lastname"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Lastname</FormLabel>
+                    <FormControl>
+                      <Input placeholder="lastname" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <FormControl>
+                      <Input placeholder="phone" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Address</FormLabel>
+                    <FormControl>
+                      <Input placeholder="address" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+          </Form>)}
       </CardContent>
       <CardFooter className="flex justify-between">
-        {contact? (<Button>Update</Button>) : ""}
+        {contact ? (<Button onClick={form.handleSubmit(submit)}>Update</Button>) : ""}
       </CardFooter>
     </Card>
   )
